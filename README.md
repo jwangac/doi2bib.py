@@ -23,7 +23,8 @@ Output
 ```
 
 # Requirement
-Python 3
+- Python 3
+- bibtexparser
 
 # Usage
 ```

@@ -14,13 +14,26 @@ def set_proxy(proxy):
     urllib.request.install_opener(opener)
 
 
+def bibformat(original_data):
+    import bibtexparser
+    from bibtexparser.bparser import BibTexParser
+    from bibtexparser.bwriter import BibTexWriter
+    parser = BibTexParser(common_strings=True)
+    parser.homogenize_fields = True
+    parser.ignore_nonstandard_types = False
+    bib = bibtexparser.loads(original_data, parser)
+    writer = BibTexWriter()
+    writer.indent = '\t'
+    return bibtexparser.dumps(bib, writer).strip()
+
+
 def convert(doi):
     req = urllib.request.Request(
         url='https://doi.org/{}'.format(doi),
         headers={'Accept': 'application/x-bibtex'}
     )
     with urllib.request.urlopen(req) as response:
-        lines = response.read().decode().splitlines()
+        lines = bibformat(response.read().decode()).splitlines()
 
     type = lines[0].split('{')[0][1:]
 
